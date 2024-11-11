@@ -24,7 +24,7 @@ const Shop = () => {
       <div className='shop-page'>
         <PageHeader title="Our Shop" image_url={'/shop-bg.jpg'}/>
         <div className='shop-page-content'>
-          <h2> Our Shop </h2>
+          <h2 className="shop-title"> Our Shop </h2>
           {/* Products Container */}
           <div id="productCont">
             <ProductList/>
