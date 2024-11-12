@@ -104,6 +104,7 @@ const Home = () => {
       <form
         onSubmit={handleSubmit}
         method="POST"
+        className='donation-form'
       >
 
       <div className='donate-form-group'>
