@@ -2,6 +2,10 @@
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react';
 import Seo from "../components/Seo"
+import axios from 'axios';
+
+// Contact Form ENV Import
+const formEndpoint = import.meta.env.VITE_APP_WP_API_DONATION_FORM_ENDPOINT;
 
 // Home Page Component
 const Home = () => {
@@ -9,18 +13,6 @@ const Home = () => {
   // Variables & States
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  // Shop Navigation Function
-  const handleShopClick = (event) => {
-    event.preventDefault();
-    navigate('/shop');
-  };
-
-  // Events & Volunteer Navigation Function
-  const handleEventClick = (event) => {
-    event.preventDefault();
-    navigate('/events-and-volunteer');
-  };
 
   // Open/Close Mobile Menu Function
   const toggleModal = () => {
@@ -44,6 +36,216 @@ const Home = () => {
       <div className='page-header' style={{backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(${image_url})`}}>
         <h1> {title} </h1>
       </div>
+    )
+  }
+
+  // Donation Form Component
+  const DonationForm = () => {
+
+    const [submitted, setSubmitted] = useState(false);
+    const [error, setError] = useState(false);
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [area, setArea] = useState('');
+    const [amount, setAmount] = useState('');
+    const [message, setMessage] = useState('');
+
+     // Handle Submit Form Function
+     const handleSubmit = (event) => {
+      // stop page refreshing
+      event.preventDefault();
+      const testForm = new FormData();
+        testForm.append('your-name', name)
+        testForm.append('your-email', email)
+        testForm.append('your-message', message)
+        testForm.append('your-area', area)
+        testForm.append('your-amount', amount)
+
+        axios.post(formEndpoint, testForm, {
+          // include headers to tell the mail service we're sending a form
+          // headers tell the server what to expect
+          headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+          }
+      })
+      
+      .then(function (response) {
+        console.log(response);
+        // update state to show submitted
+        setSubmitted(true);
+      })
+      .catch(function (error) {
+        console.log(error);
+        // update state to show error
+        setError(true);
+      });
+    };
+
+    // Success Message
+    if (submitted) {
+      return (
+          <>
+              <h3>Thank you for your donation!</h3>
+              <p>We really appreciate your help!</p>
+          </>
+      );
+    };
+    // Error Message
+    if (error) {
+      return (
+          <>
+              <h3>Error!</h3>
+              <p>Sorry, we were unable to send your donation.</p>
+          </>
+      );
+    };
+
+    return (
+      <form
+        onSubmit={handleSubmit}
+        method="POST"
+      >
+
+      <div className='donate-form-group'>
+        <label htmlFor=""> Full Name: </label>
+        <input  
+          type="text"
+          name="name"
+          onChange={(event) => setName(event.target.value)}
+          value={name}
+          required
+        />
+      </div>
+
+      <div className='donate-form-group'>
+        <label htmlFor=""> Email Address: </label>
+        <input  
+          type="email"
+          name="email"
+          onChange={event => setEmail(event.target.value)}
+          value={email}
+          required
+        />
+      </div>
+
+      <div className='donate-form-group'>
+        <label htmlFor=""> Which conservation area are you most interested in donating to: </label>
+
+        {/* Land Checkbox */}
+        <div className='form-checkbox'>
+          <label htmlFor="landcheckbox"> Land </label>
+          <input 
+              type="checkbox" 
+              name="landcheckbox" 
+              id="landcheckbox" 
+              onChange={event => setArea(event.target.value)}
+              value={area}
+          />
+        </div>
+
+        {/* Fresh Water Checkbox */}
+        <div className='form-checkbox'>
+          <label htmlFor="freshcheckbox"> Fresh Water </label>
+          <input 
+              type="checkbox" 
+              name="freshcheckbox" 
+              id="freshcheckbox" 
+              onChange={event => setArea(event.target.value)}
+              value={area}
+          />
+        </div>
+
+        {/* Oceans Checkbox */}
+        <div className='form-checkbox'>
+          <label htmlFor="oceanscheckbox"> Oceans </label>
+          <input 
+              type="checkbox" 
+              name="oceanscheckbox" 
+              id="oceanscheckbox" 
+              onChange={event => setArea(event.target.value)}
+              value={area}
+          />        </div>
+
+        {/* Climate Checkbox */}
+        <div className='form-checkbox'>
+          <label htmlFor="climatecheckbox"> Climate </label>
+          <input 
+              type="checkbox" 
+              name="climatecheckbox" 
+              id="climatecheckbox" 
+              onChange={event => setArea(event.target.value)}
+              value={area}
+          />        </div>
+
+        {/* All Areas Checkbox */}
+        <div className='form-checkbox'>
+          <label htmlFor="allareascheckbox"> All Areas </label>
+          <input 
+              type="checkbox" 
+              name="allareascheckbox" 
+              id="allareascheckbox" 
+              onChange={event => setArea(event.target.value)}
+              value={area}
+          />        </div>
+      </div>
+
+      <div className="donate-form-group">
+        <label htmlFor=""> Donation Amount: </label>
+
+        <div className='donate-checkbox'>
+          <label htmlFor="20donate"> $20 </label>
+          <input 
+              type="checkbox" 
+              name="20donate" 
+              id="20donate" 
+              onChange={event => setAmount(event.target.value)}
+              value={amount}
+          />        
+          </div>
+
+        <div className='donate-checkbox'>
+          <label htmlFor="50donate"> $50 </label>
+          <input 
+              type="checkbox" 
+              name="50donate" 
+              id="50donate" 
+              onChange={event => setAmount(event.target.value)}
+              value={amount}
+          />         </div>
+
+        <div className='donate-checkbox'>
+          <label htmlFor="100donate"> $100 </label>
+          <input 
+              type="checkbox" 
+              name="100donate" 
+              id="100donate" 
+              onChange={event => setAmount(event.target.value)}
+              value={amount}
+          />         </div>
+
+        <div className='donate-checkbox'>
+          <label htmlFor="200donate"> $200 </label>
+          <input 
+              type="checkbox" 
+              name="200donate" 
+              id="200donate" 
+              onChange={event => setAmount(event.target.value)}
+              value={amount}
+          />         </div>
+
+      </div>
+
+      <div className='donate-form-group'>
+        <label htmlFor=""> I would like to help because...  </label>
+        <textarea
+                name="message"
+                onChange={event => setMessage(event.target.value)}
+                value={message}
+                required
+            />      </div>
+
+      <button type="submit"> Send Donation! </button>
+    </form>   
     )
   }
 
@@ -98,22 +300,7 @@ const Home = () => {
           <div className='home-bottom'>
             <h2 className='subtitle'> Want To Help Us Continue Our Mission? </h2>
             <h3 className='subtitle'> Donate Right Here To Our Beautiful Cause </h3>
-            <div className='donate-buttons'>
-              <div className="donate-button">
-                <h3> $25 </h3>
-              </div>
-              <div className="donate-button">
-                <h3>$50</h3>
-              </div>
-              <div className="donate-button">
-                <h3>$100</h3>
-              </div>
-              <div className="donate-button">
-                <h3> $200 </h3>
-              </div>
-              <button className='confirm-button'> Confirm Donation </button>
-
-            </div>
+            <DonationForm/>          
           </div>
          
         </div>

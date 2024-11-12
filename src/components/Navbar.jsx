@@ -1,8 +1,11 @@
 // Base Imports
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { FaCartPlus } from "react-icons/fa6";
 import {CartContext} from "../context/CartContext";
+import axios from "axios"
+
+const baseURL = import.meta.env.VITE_WP_BASE_URL
 
 // Navbar Component
 const Navbar = () => {
@@ -12,6 +15,26 @@ const Navbar = () => {
     const cartCount = cart.reduce((acc, item) => acc + item.quantity, 0);
     const [isOpen, setIsOpen] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [logoUrl, setLogoUrl] = useState("");
+
+    // Logo Fetching UseEffect
+    useEffect(() => {
+        const fetchNavLogo = async () => {
+            try {
+                const response = await axios.get(`${baseURL}wp-json/custom/v1/nav-logo`)
+                if (response.status === 200) {
+                    const data = response.data;
+                    setLogoUrl(data[0]);
+                } else {
+                    console.error('Failed to fetch logo URL');
+                }
+            } catch (error) {
+                console.error('Error fetching logo', error)
+            }
+        };
+
+        fetchNavLogo();
+    }, [])
 
     // MobileMenu Function
     const toggleMenu = () => {
@@ -47,7 +70,7 @@ const Navbar = () => {
         <header>
             <nav className={`navbar ${isOpen ? "menu-open" : ""}`}>
                 <NavLink to="/" className="logo">
-                    <img src="/logo.svg" alt="website logo" />
+                    <img src={logoUrl} alt="website logo" />
                 </NavLink>
                 <div className="menu-icon" onClick={toggleMenu}>
                     <div className={`bar bar1 ${isOpen ? "toggle" : ""}`}></div>

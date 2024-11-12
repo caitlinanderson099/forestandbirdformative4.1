@@ -7,11 +7,11 @@ import Navbar from './components/Navbar';
 import Links from './components/Links';
 import Footer from './components/Footer';
 
-// App Componet
+// App Component
 const App = () => {
 
   // Variables
-  const {bgColor, fontFamily, navColor, buttonColor, buttonTextColor, buttonBorderColor} = useCustomizer();
+  const {bgColor, fontFamily, navColor, footerColor, buttonColor, buttonTextColor} = useCustomizer();
 
   // UseEffect
   useEffect(() => {
@@ -25,20 +25,22 @@ const App = () => {
     if (fontFamily === "Poppins") {
       document.body.style.fontFamily = `"Poppins", sans-serif`;
     }
-    if (fontFamily === "DotGothic") {
+    if (fontFamily === "DotGothic16") {
       document.body.style.fontFamily = `"DotGothic16", sans-serif`;
+    }
+    if (fontFamily === "Montserrat") {
+      document.body.style.fontFamily = `"Montserrat", sans-serif`;
     }
 
     document.querySelector('nav').style.backgroundColor = navColor;
-    document.querySelector('footer').style.backgroundColor = navColor;
+    document.querySelector('footer').style.backgroundColor = footerColor;
     const buttons = document.querySelectorAll('button');
     buttons.forEach(button => {
       button.style.backgroundColor = buttonColor;
       button.style.color = buttonTextColor;
-      button.style.border = buttonBorderColor;
   })
 
-  },[bgColor, fontFamily, navColor, buttonColor, buttonTextColor, buttonBorderColor])
+  },[bgColor, fontFamily, navColor, footerColor, buttonColor, buttonTextColor])
   
   // Master Return
   return (

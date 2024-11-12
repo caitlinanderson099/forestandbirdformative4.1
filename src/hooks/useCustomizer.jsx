@@ -8,15 +8,14 @@ const useCustomizer = () => {
 
     // Background
     const [bgColor, setBgColor] = useState("");
+    const [footerColor, setFooterColor] = useState("");
     // Fonts
     const [fontFamily, setFontFamily] = useState("");
     // Navbar & MobileMenu
-    const [mobileMenu, setMobileMenu] = useState("");
     const [navColor, setNavColor] = useState("");
     // Buttons
     const [buttonColor, setButtonColor] = useState("");
     const [buttonTextColor, setButtonTextColor] = useState("");
-    const [buttonBorderColor, setButtonBorderColor] = useState("");
   
     // ENV Import
     const baseURL = import.meta.env.VITE_WP_BASE_URL;
@@ -25,14 +24,13 @@ const useCustomizer = () => {
     useEffect(() => {
         axios.get(`${baseURL}wp-json/custom-theme/v1/customizer-settings`)
         .then((response) => {
-            const {backgroundColor, fontFamily, mobileMenu, navbarColor, buttonColor, buttonTextColor, buttonBorderColor} = response.data;
+            const {backgroundColor, fontFamily, navbarColor, footerColor, buttonColor, buttonTextColor} = response.data;
             setBgColor(backgroundColor);
             setFontFamily(fontFamily);
-            setMobileMenu(mobileMenu);
             setNavColor(navbarColor);
             setButtonColor(buttonColor);
+            setFooterColor(footerColor);
             setButtonTextColor(buttonTextColor);
-            setButtonBorderColor(buttonBorderColor);
         })
         .catch((error) => {
             console.error('Error Fetching customizer settings: ', error)
@@ -40,7 +38,7 @@ const useCustomizer = () => {
     }, [baseURL]);
 
     // Customizer Return
-    return {bgColor, fontFamily, mobileMenu, navColor, buttonColor, buttonTextColor, buttonBorderColor};
+    return {bgColor, fontFamily, navColor, buttonColor, footerColor, buttonTextColor};
 };
 
 export default useCustomizer;
